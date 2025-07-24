@@ -1,0 +1,30 @@
+# services:
+#   nodeserver-container:
+#     image: studytest:v1
+#     build: .
+#     develop:
+#       watch:
+#         - action : sync+restart
+#           path: .
+#           target: /app
+#         - action : rebuild
+#           path : package.json
+
+#     ports:
+#       - 8080:8080
+#     # environment:
+#     #   - name=value
+#     networks:
+#       - mynet1
+#       - mynet2
+
+#   nginx:
+#     image: nginxtest:v1
+#     ports:
+#       - 80:80
+#     networks:
+#       - mynet1
+
+# networks:
+#   mynet1:
+#   mynet2:

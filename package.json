@@ -1,0 +1,23 @@
+{
+  "name": "pigo_main",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeonghakHong-Sch/PIGO_main.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SeonghakHong-Sch/PIGO_main/issues"
+  },
+  "homepage": "https://github.com/SeonghakHong-Sch/PIGO_main#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "mysql2": "^3.14.2"
+  }
+}
