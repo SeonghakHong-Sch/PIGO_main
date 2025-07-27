@@ -22,6 +22,13 @@ services:
       - 8080:8080
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    develop: #컨테이너 띄우고 저장하면 실시간으로 반영해주는거
+      watch:
+        - action: sync
+          path: . #어떤 파일 감시할건지 ㅇㅇ 폴더 경로
+          target: /app
+        - action: rebuild
+          path: package.json 
 
 
 volumes:

@@ -13,4 +13,4 @@ RUN chmod +x /usr/local/bin/wait-for
 EXPOSE 8080
 
 USER node
-CMD ["sh", "-c", "wait-for db:3306 -- node src/server.js"]
+CMD ["sh", "-c", "wait-for db:3306 -- npx nodemon -L src/server.js"]

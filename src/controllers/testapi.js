@@ -39,6 +39,9 @@ exports.getUserLocationTest = (req, res) => {
 
     db.query('SELECT * FROM InterLocationTable WHERE user_id = ?;',[userId], (err, results) => {
         if (err) return res.status(500).json({error: err});
-        res.json(results.map(item => item.location_code));
+        res.json(results.map(item => ({
+            lDongRegnCd: item.lDongRegnCd,
+            lDongSignguCd: item.lDongSignguCd
+        })));
     });
 };

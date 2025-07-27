@@ -12,7 +12,7 @@ const server = app.listen(8080, () => {
 });
 
 app.get('/', (req, res) => {
-  res.send('안녕');
+  res.send('docker watch, nodemon 테스트 / 아 성공 나이스 ㅋㅋㅋ');
 });
 
 
