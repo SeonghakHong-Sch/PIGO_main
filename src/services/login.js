@@ -3,6 +3,8 @@ const router = express.Router();
 const qs = require('qs');
 const axios = require('axios');
 const JWTToken = require('../utils/utils.js');
+const connection=require('../config/db.js');
+const dbaccess=require('./dbAccess.js');
 
 const kakao = { //환경변수 불러옴
     clientID: process.env.KAKAO_REST_API_KEY,
@@ -30,7 +32,6 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
         token = tokenResponse.data;
     } catch (e) {
         console.log(e);
-        console.log(kakao);
         return res.status(500).json(e.response ? e.response.data : e.message);
     }
 
@@ -52,6 +53,14 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
 
     //user.data 이용해서 뭔가뭔가 하기
     console.log(user);
+    dbaccess.haveUser(connection,user.id)
+        .then((exists)=>{
+            if(!exists){
+                //db에 집어넣기
+                console.log('not exist!');
+            }
+        });
+
     const JWT = JWTToken.issueJWT(user);
     console.log(JWT);
     res.json({ //토큰이랑 유저데이터 response
