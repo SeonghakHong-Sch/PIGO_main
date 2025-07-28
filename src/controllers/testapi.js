@@ -45,3 +45,11 @@ exports.getUserLocationTest = (req, res) => {
         })));
     });
 };
+
+exports.JWTgetUserInfoTest = (req, res) => {
+  const user = req.user; // JWT payload (예: { user_id, user_name ... })
+  const userId = user.user_id; // JWT payload에서 추출 (발급 시 payload 값 참고)
+  // userId로 사용자 정보 조회(또는 user 자체 활용 가능)
+  console.log('인증됨')
+  res.json({ message: '인증된 유저 요청', userId, user });
+};

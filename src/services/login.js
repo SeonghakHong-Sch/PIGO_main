@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const qs = require('qs');
 const axios = require('axios');
+const JWTToken = require('../utils/utils.js');
 
 const kakao = { //환경변수 불러옴
     clientID: process.env.KAKAO_REST_API_KEY,
@@ -51,5 +52,10 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
 
     //user.data 이용해서 뭔가뭔가 하기
     console.log(user);
-    res.json(user);
+    const JWT = JWTToken.issueJWT(user);
+    console.log(JWT);
+    res.json({ //토큰이랑 유저데이터 response
+        PIGO_token: JWT,
+        user
+    });
 };

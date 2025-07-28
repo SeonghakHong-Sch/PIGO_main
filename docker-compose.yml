@@ -24,6 +24,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - KAKAO_REST_API_KEY=${KAKAO_REST_API_KEY}
       - KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
     develop: #컨테이너 띄우고 저장하면 실시간으로 반영해주는거
       watch:
         - action: sync
