@@ -58,6 +58,10 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
             if(!exists){
                 //db에 집어넣기
                 console.log('not exist!');
+                dbaccess.register(connection,user);
+            }
+            else{
+                console.log('exist!');
             }
         });
 

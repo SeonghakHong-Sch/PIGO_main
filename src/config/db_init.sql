@@ -6,7 +6,7 @@ USE PIGO_DB;
 
 -- //UserTable 생성//--
 CREATE TABLE IF NOT EXISTS UserTable (
-	user_id INT PRIMARY KEY AUTO_INCREMENT,
+	user_id BIGINT PRIMARY KEY,
 	user_name VARCHAR(100) NOT NULL,
 	user_email VARCHAR(100) NOT NULL,
 	user_sex ENUM('male', 'female') DEFAULT NULL,
