@@ -1,9 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const testapi = require('../controllers/testapi.js');
+const interTour = require('../controllers/interTourController.js');
 const JWT = require('../utils/utils.js');
 const login = require('../services/login.js');
 const middleware = require('../utils/middleWare.js');
+
+
+
+//관광지 관련 API
+router.get('/tour/getInterTour', middleware.authToken, interTour.getInterTour);
+router.post('/tour/setInterTour', middleware.authToken, interTour.setInterTour);
 
 //testAPI
 router.get('/test/getUserInfoTest/:user_id', testapi.getUserInfoTest);
