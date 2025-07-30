@@ -15,10 +15,3 @@ exports.issueJWT = (user) => {
     console.log(process.env.JWT_SECRET_KEY)
     return JWT.sign(payload, process.env.JWT_SECRET_KEY, options);
 }
-
-// exports.JWTToken = (req, res) => {
-//     console.log('JWT Controller')
-//     const user = req.body;
-//     console.log(user);
-//     res.json({token: issueJWT(user)});
-// }

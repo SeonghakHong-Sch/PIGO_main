@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS TourTable (
 CREATE TABLE IF NOT EXISTS InterTourTable (
 	tour_user_id INT PRIMARY KEY AUTO_INCREMENT,
 
-	user_id INT,
+	user_id BIGINT,
 	CONSTRAINT fk_user_tour FOREIGN KEY (user_id) REFERENCES UserTable(user_id), 
 
 	tour_id VARCHAR(10),
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS InterTourTable (
 CREATE TABLE IF NOT EXISTS InterLocationTable (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 
-	user_id INT,
+	user_id BIGINT,
 	CONSTRAINT fk_user_Locate FOREIGN KEY (user_id) REFERENCES UserTable(user_id), 
 
 	lDongRegnCd VARCHAR(5),
@@ -59,11 +59,11 @@ SET FOREIGN_KEY_CHECKS=0;
 
 
 -- //테스트 데이터 삽입//--
-INSERT INTO UserTable (user_name, user_email, user_sex, user_age)
-VALUES ('test1', 'tjdgkr0719@khu.ac.kr','male', 20);
+INSERT INTO UserTable
+VALUES (1, 'test1', 'tjdgkr0719@khu.ac.kr','male', 20);
 
-INSERT INTO UserTable (user_name, user_email, user_sex, user_age)
-VALUES ('test2', 'hsgpmh72@gmail.com','male', 40);
+INSERT INTO UserTable
+VALUES (2, 'test2', 'hsgpmh72@gmail.com','male', 40);
 
 INSERT INTO TourTable
 VALUES ('3505386', '39', '서울특별시 중구 퇴계로6길 3-28 (회현동1가)', 
