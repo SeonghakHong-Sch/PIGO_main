@@ -1,16 +1,24 @@
+const { request } = require('express');
 const db = require('../config/db.js');
 
 exports.getInterTour = (req, res) => {
     const user = req.user; // JWT payload ({ user_id, user_name ... })
     const userId = user.user_id; // JWT payload에서 추출 (payload 값 참고)
     
-    let resultResopnse;
     db.query('SELECT * FROM InterTourTable WHERE user_id = ?;',[userId], (err, results) => {
             if (err) {
                 return res.status(500).json({error: err});
-            }            
-            resultResopnse = results.map(item=>item.tour_id);
-            res.json(resultResopnse);
+            }
+            console.log(results);
+            const inter_tours = results.map(item => (
+                item.tour_id
+            ))
+            return res.status(200).json({
+                message: '관심 관광지',
+                user_id: userId,
+                total_count: results.length,
+                tours: inter_tours
+            });
         });
 };
 
