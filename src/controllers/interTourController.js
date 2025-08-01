@@ -1,4 +1,3 @@
-const { request } = require('express');
 const db = require('../config/db.js');
 
 exports.getInterTour = (req, res) => {
@@ -9,7 +8,6 @@ exports.getInterTour = (req, res) => {
             if (err) {
                 return res.status(500).json({error: err});
             }
-            console.log(results);
             const inter_tours = results.map(item => (
                 item.tour_id
             ))

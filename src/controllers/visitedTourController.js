@@ -1,5 +1,4 @@
 const db = require('../config/db.js');
-const { param } = require('../routes/routes.js');
 
 exports.getVisitedTour = (req, res) => {
     const user = req.user; // JWT payload ({ user_id, user_name ... })
