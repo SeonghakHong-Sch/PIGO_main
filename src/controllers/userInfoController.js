@@ -52,8 +52,9 @@ exports.setUserInfo=async (req,res)=>{
     if (updates.length === 0) {
         return res.status(400).json({ error: '수정할 내용이 없습니다.' });
     }
-
-    const queryUpdate = `UPDATE UserTable SET ${updates.join(', ')} WHERE user_id = ?`;
+    
+    const update=updates.join(', ')
+    const queryUpdate = `UPDATE UserTable SET `+update+' WHERE user_id = ?';
 
     params.push(userID);
 
