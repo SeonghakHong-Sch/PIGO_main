@@ -28,17 +28,40 @@ exports.getUserInfo=(req,res)=>{
 exports.setUserInfo=async (req,res)=>{
     const userID=req.user.user_id;
     const body=req.body;//body에 newName newAge이런식으로 저장할예정
-    const newName=body.newName ?? null;
-    const newEmail=body.newEmail ?? null;
-    const newSex=body.newSex ?? null;
-    const newAge=body.newAge?? null;
-    const queryUpdate='UPDATE UserTable SET user_name = ?, user_email = ?, user_sex = ?, user_age = ? WHERE user_id = ?';
-    
-    try{
-        const [result]=await db.promise().query(queryUpdate,[newName,newEmail,newSex,newAge,userID]);
-        return res.status(200).json({message:'success', changedRows:result.changedRows});
-    }   
-    catch(err){
-        return res.status(500).json({error:'DB Update fail',detail:err});
+    // 변경할 필드만 추림
+    let updates = [];
+    let params = [];
+
+    if (body.newName !== undefined) {
+        updates.push('user_name = ?');
+        params.push(body.newName);
+    }
+    if (body.newEmail !== undefined) {
+        updates.push('user_email = ?');
+        params.push(body.newEmail);
+    }
+    if (body.newSex !== undefined) {
+        updates.push('user_sex = ?');
+        params.push(body.newSex);
+    }
+    if (body.newAge !== undefined) {
+        updates.push('user_age = ?');
+        params.push(body.newAge);
+    }
+
+    if (updates.length === 0) {
+        return res.status(400).json({ error: '수정할 내용이 없습니다.' });
+    }
+
+    const queryUpdate = `UPDATE UserTable SET ${updates.join(', ')} WHERE user_id = ?`;
+
+    params.push(userID);
+
+    try {
+        const [result] = await db.promise().query(queryUpdate, params);
+        return res.status(200).json({ message: 'success', changedRows: result.changedRows });
+    }
+    catch (err) {
+        return res.status(500).json({ error: 'DB Update fail', detail: err });
     }
 }
