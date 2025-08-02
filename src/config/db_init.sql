@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS VisitedTourTable (
 	CONSTRAINT fk_user_Visited FOREIGN KEY (user_id) REFERENCES UserTable(user_id),
 
 	tour_id INT,
-	CONSTRAINT fk_tour_Visited FOREIGN KEY (tour_id) REFERENCES TourTable(contentid)
+	CONSTRAINT fk_tour_Visited FOREIGN KEY (tour_id) REFERENCES TourTable(contentid),
 
 	visited_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) CHARACTER SET utf8mb4;
