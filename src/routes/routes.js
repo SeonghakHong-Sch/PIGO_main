@@ -4,6 +4,7 @@ const testapi = require('../controllers/testapi.js');
 const userInfo=require('../controllers/userInfoController.js');
 const interTour = require('../controllers/interTourController.js');
 const visitedTour = require('../controllers/visitedTourController.js');
+const Tour = require('../controllers/tourTBController.js');
 const login = require('../services/login.js');
 const middleware = require('../utils/middleWare.js');
 
@@ -14,6 +15,7 @@ router.post('/user/setUserInfo',middleware.authToken,userInfo.setUserInfo);
 
 
 //관광지 관련 API
+router.post('/tour/inputTour', Tour.inputTour);
 router.get('/tour/getInterTour', middleware.authToken, interTour.getInterTour);
 router.post('/tour/setInterTour', middleware.authToken, interTour.setInterTour);
 
