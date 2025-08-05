@@ -34,7 +34,8 @@ exports.inputTour = async (req, res) => {
                 const [result] = await db.promise().query('INSERT INTO TourTable VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', parameters);
                 rightResults.push(item.contentid);
             } catch (err) {
-                errorResults.push({contentid: item.contentid, error: err});
+                console.log('투어테이블 추가 오류',item.contentid,err);
+                errorResults.push({message:"투어테이블 추가 오류",contentid: item.contentid, error: err});
             }
         } else {
             alreadyExists.push(item.contentid);

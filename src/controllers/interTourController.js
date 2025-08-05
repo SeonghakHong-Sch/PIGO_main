@@ -6,7 +6,8 @@ exports.getInterTour = (req, res) => {
     
     db.query('SELECT * FROM InterTourTable WHERE user_id = ?;',[userId], (err, results) => {
             if (err) {
-                return res.status(500).json({error: err});
+                console.log('관심관광지 조회 오류',err);
+                return res.status(500).json({message : '관심관광지 조회 오류',error: err});
             }
             const inter_tours = results.map(item => (
                 item.tour_id
@@ -28,7 +29,7 @@ exports.setInterTour = async (req, res) => {
     const contendidList = body.contendidList; //contentidList 저장
 
     if (!Array.isArray(contendidList) || contendidList.length === 0) {
-        return res.status(400).json({message: "관심 관광지를 하나 이상 넣어 주세용"});
+        return res.status(400).json({message: "관심 관광지를 하나 이상 넣어 주세요"});
     }
 
     if (attribute === 'ADD') {
@@ -43,9 +44,10 @@ exports.setInterTour = async (req, res) => {
             });
 
             await Promise.all(insertPromise); //insertPromises 배열 전부 될 때까지 기다림. 동기로 한다는 말인가?
-            return res.status(200).json({message: '추가 정상 처리 됨'});
+            return res.status(200).json({message: '추가 정상 처리 완료'});
         } catch(err) {
-            return res.status(500).json({error: err, message: 'setInterTour 데이터 삽입 불가'});
+            console.log('setInterTour 데이터 삽입 불가',err );
+            return res.status(500).json({message: 'setInterTour 데이터 삽입 불가',error: err});
         }
     }
     else if (attribute === 'DELETE') {
@@ -60,9 +62,10 @@ exports.setInterTour = async (req, res) => {
             });
 
             await Promise.all(insertPromise); //insertPromises 배열 전부 될 때까지 기다림. 동기로 한다는 말인가?
-            return res.status(200).json({message: '삭제 정상 처리 됨'});
+            return res.status(200).json({message: '삭제 정상 처리 완료'});
         } catch(err) {
-            return res.status(500).json({error: err, message: 'setInterTour 데이터 삭제 불가'});
+            console.log('setInterTour 데이터 삭제 불가',err);
+            return res.status(500).json({message: 'setInterTour 데이터 삭제 불가',error: err});
         }
     }
     else {

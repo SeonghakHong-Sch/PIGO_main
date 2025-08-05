@@ -6,9 +6,10 @@ exports.getVisitedTour = (req, res) => {
     
     db.query('SELECT * FROM VisitedTourTable WHERE user_id = ?;',[userId], (err, results) => {
             if (err) {
-                return res.status(500).json({error: err});
+                console.log('방문지 접근 오류',err);
+                return res.status(500).json({message : '방문지 접근 오류',error : err});
             }
-            console.log(results);
+            console.log('방문 지역 : ',results);
             const visited_tours = results.map(item => ({ //tours 배열 새로 저장
                 tour_id: item.tour_id,
                 visited_at: item.visited_at
@@ -31,6 +32,7 @@ exports.setVisitedTour = (req, res) => {
     const visited_at = body.visited_at; //방문시각
 
     if (contentid === undefined) {
+        console.log('관심 관광지 값 없음')
         return res.status(400).json({message: "관심 관광지 값 넣어주세요"});
     }
 
@@ -47,6 +49,7 @@ exports.setVisitedTour = (req, res) => {
 
         db.query(sql, params, (err, results) => {
             if (err) {
+                console.log('방문지 추가 오류',err);
                 return res.status(500).json({
                         message: '방문지 추가 오류 발생',
                         error: err 
@@ -73,6 +76,7 @@ exports.setVisitedTour = (req, res) => {
 
         db.query(sql, params, (err, results) => {
             if (err) {
+                console.log('방문지 삭제 오류',err);
                 return res.status(500).json({
                     message: '방문지 삭제 오류 발생',
                     error: err
