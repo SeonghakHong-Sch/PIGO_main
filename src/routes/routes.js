@@ -4,6 +4,7 @@ const testapi = require('../controllers/testapi.js');
 const userInfo=require('../controllers/userInfoController.js');
 const interTour = require('../controllers/interTourController.js');
 const visitedTour = require('../controllers/visitedTourController.js');
+const recommend = require('../controllers/recommendController.js');
 const Tour = require('../controllers/tourTBController.js');
 const login = require('../services/login.js');
 const middleware = require('../utils/middleWare.js');
@@ -23,6 +24,9 @@ router.post('/tour/setInterTour', middleware.authToken, interTour.setInterTour);
 //방문지 관련 API
 router.get('/tour/getVisitedTour', middleware.authToken, visitedTour.getVisitedTour);
 router.post('/tour/setVisitedTour', middleware.authToken, visitedTour.setVisitedTour);
+
+//추천관련 API
+router.post('/recommend/getRecommendTour', middleware.authToken, recommend.tourRecommend);
 
 
 //login
