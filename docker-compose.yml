@@ -26,6 +26,7 @@ services:
       - KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - RECOMMEND_SERVER_URL=${RECOMMEND_SERVER_URL}
+    restart: unless-stopped #이거 운영자가 직접 down 하는거 아니면 깨져도 다시 띄움
     develop: #컨테이너 띄우고 저장하면 실시간으로 반영해주는거
       watch:
         - action: sync
