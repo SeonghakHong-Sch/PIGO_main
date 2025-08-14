@@ -1,4 +1,3 @@
-const { json } = require('express');
 const db = require('../config/db.js');
 
 exports.tourAnalytic = async (params) => {
