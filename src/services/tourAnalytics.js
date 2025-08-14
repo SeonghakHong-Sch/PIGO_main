@@ -28,7 +28,8 @@ exports.tourAnalytic = async (params) => {
     INNER JOIN UserTable ut 
 	    ON ut.user_id = vt.user_id
     GROUP BY vt.tour_id, tt.title, tt.lDongRegnCd, tt.lDongSignguCd, tt.lclsSystm1
-    ORDER BY ${params} DESC;
+    ORDER BY ${params} DESC
+    LIMIT 30;
     `; //이거 백틱으로 이렇게 넣어도 order_byList라는 허용된 값만 들어가서 인젝션 위험 없음
     //아 그리고 ? 이건 value값 넣을때만 되더라 컬럼 선택할땐 저거 안됨 ;
     
