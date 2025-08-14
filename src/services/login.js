@@ -75,10 +75,8 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
     }
 
     const JWT = JWTToken.issueJWT(user);
-    // res.json({ //토큰이랑 유저데이터 response
-    //     PIGO_token: JWT,
-    //     user
-    // });
-    const redirectto = 'https://njihun.github.io/Pick_and_Go/login/kakao.html?JWT='+JWT;
-    res.redirect(redirectto);
+    res.json({ //토큰이랑 유저데이터 response
+        PIGO_token: JWT,
+        user
+    });
 };

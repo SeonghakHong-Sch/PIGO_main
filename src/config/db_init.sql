@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS UserTable (
 	user_id BIGINT PRIMARY KEY,
 	user_name VARCHAR(100) NOT NULL,
 	user_email VARCHAR(100) NOT NULL,
-	user_sex ENUM('male', 'female') DEFAULT NULL,
-	user_age INT DEFAULT 0
+	user_sex ENUM('male', 'female') DEFAULT 'male',
+	user_age DATETIME DEFAULT CURRENT_TIMESTAMP
 ) CHARACTER SET utf8mb4;
 
 -- //TourTable 생성//--
@@ -66,6 +66,35 @@ CREATE TABLE IF NOT EXISTS VisitedTourTable (
 	visited_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) CHARACTER SET utf8mb4;
 
+CREATE TABLE IF NOT EXISTS ReviewTable(
+	review_id INT PRIMARY KEY AUTO_INCREMENT,
+	
+	user_id BIGINT,
+	CONSTRAINT fk_user_Review FOREIGN KEY (user_id) REFERENCES UserTable(user_id),
+
+	tour_id VARCHAR(10),
+	CONSTRAINT fk_tour_Review FOREIGN KEY (tour_id) REFERENCES TourTable(contentid),
+
+	content TEXT NOT NULL,
+
+	created DATETIME DEFAULT CURRENT_TIMESTAMP
+
+	edited DATETIME DEFAULT CURRENT_TIMESTAMP
+
+	parentid INT DEFAULT 0 --답글기능 임시 안쓰면 냅둠--
+)
+
+CREATE TABLE IF NOT EXISTS LikeTable(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+
+	user_id BIGINT,
+	CONSTRAINT fk_user_Like FOREIGN KEY (user_id) REFERENCES UserTable(user_id),
+
+	review_id INT,
+	CONSTRAINT fk_review_Like FOREIGN KEY (review_id) REFERENCES ReviewTable(review_id),
+
+	is_like BIT DEFAULT 1,
+)
 
 SET FOREIGN_KEY_CHECKS=0;
 
