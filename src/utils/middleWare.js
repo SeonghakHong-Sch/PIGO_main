@@ -11,6 +11,7 @@ exports.authToken = (req, res, next) => {
     console.log(authHead);
     JWT.verify(PIGO_token, process.env.JWT_SECRET_KEY, (err, decoded) => {
         if (err) {
+            console.log(err);
             return res.status(401).json({message: '토큰 에러'});
         }
         req.user = decoded;
