@@ -6,6 +6,7 @@ const interTour = require('../controllers/interTourController.js');
 const visitedTour = require('../controllers/visitedTourController.js');
 const recommend = require('../controllers/recommendController.js');
 const Tour = require('../controllers/tourTBController.js');
+const analytics = require('../controllers/statisticsController.js');
 const login = require('../services/login.js');
 const middleware = require('../utils/middleWare.js');
 
@@ -31,6 +32,8 @@ router.post('/tour/setVisitedTour', middleware.authToken, visitedTour.setVisited
 //추천관련 API
 router.post('/recommend/getRecommendTour', middleware.authToken, recommend.tourRecommend);
 
+//핫플 조회
+router.get('/tour/getHotplace/:order_by', analytics.getHotplace);
 
 //login
 router.get('/kakao/code',login.kakaoLogin);
