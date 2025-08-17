@@ -1,15 +1,26 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
-
 const express = require('express');
+const routes = require('./routes/routes');
+const https =require('https');
+const fs = require('fs');
+const path = require('path')
+
+const httpsOptions = {
+  key: fs.readFileSync(path.resolve(__dirname, '../ssl/server.key')),
+  cert: fs.readFileSync(path.resolve(__dirname, '../ssl/server.crt'))
+}
+
 const app = express();
 app.use(express.json());
-
-const routes = require('./routes/routes');
 app.use('/', routes);
 
-const server = app.listen(8080, () => {
-  console.log('서버 실행중 http://localhost:8080');
-});
+
+https.createServer(httpsOptions, app).listen(8443, () => {
+})
+
+// const server = app.listen(8443, () => {
+//   console.log('서버 실행중 http://localhost:8080');
+// });
 
 app.get('/', (req, res) => {
   res.send('docker watch, nodemon 테스트 / 아 성공 나이스 ㅋㅋㅋ');
