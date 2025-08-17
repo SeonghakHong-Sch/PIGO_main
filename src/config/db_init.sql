@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS TourTable (
     lDongSignguCd VARCHAR(5) NOT NULL,
     lclsSystm1 VARCHAR(10) NOT NULL,
     lclsSystm2 VARCHAR(10) NOT NULL,
-    lclsSystm3 VARCHAR(10) NOT NULL
+    lclsSystm3 VARCHAR(10) NOT NULL,
+	avg_rating DECIMAL(3,2) DEFAULT 0
 ) CHARACTER SET utf8mb4;
 
 -- //InterTourTable 생성//--
@@ -69,17 +70,19 @@ CREATE TABLE IF NOT EXISTS VisitedTourTable (
 CREATE TABLE IF NOT EXISTS ReviewTable(
 	review_id INT PRIMARY KEY AUTO_INCREMENT,
 	
-	user_id BIGINT,
+	user_id BIGINT NOT NULL,
 	CONSTRAINT fk_user_Review FOREIGN KEY (user_id) REFERENCES UserTable(user_id),
 
-	tour_id VARCHAR(10),
+	tour_id VARCHAR(10) NOT NULL,
 	CONSTRAINT fk_tour_Review FOREIGN KEY (tour_id) REFERENCES TourTable(contentid),
 
 	content TEXT NOT NULL,
 
-	created DATETIME DEFAULT CURRENT_TIMESTAMP
+	created DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-	edited DATETIME DEFAULT CURRENT_TIMESTAMP
+	edited DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+	rating INT NOT NULL,
 
 	parentid INT DEFAULT 0 --답글기능 임시 안쓰면 냅둠--
 )
