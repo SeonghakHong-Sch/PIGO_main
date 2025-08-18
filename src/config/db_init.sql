@@ -84,8 +84,10 @@ CREATE TABLE IF NOT EXISTS ReviewTable(
 
 	rating INT NOT NULL,
 
-	parentid INT DEFAULT 0 --답글기능 임시 안쓰면 냅둠--
-)
+	parentid INT DEFAULT 0,
+
+	is_deleted BIT DEFAULT 0
+) CHARACTER SET utf8mb4;
 
 CREATE TABLE IF NOT EXISTS LikeTable(
 	id INT PRIMARY KEY AUTO_INCREMENT,
@@ -96,24 +98,50 @@ CREATE TABLE IF NOT EXISTS LikeTable(
 	review_id INT,
 	CONSTRAINT fk_review_Like FOREIGN KEY (review_id) REFERENCES ReviewTable(review_id),
 
-	is_like BIT DEFAULT 1,
-)
+	is_like BIT DEFAULT 1
+) CHARACTER SET utf8mb4;
 
 SET FOREIGN_KEY_CHECKS=0;
 
 
 -- //테스트 데이터 삽입//--
-INSERT INTO UserTable
-VALUES (1, 'test1', 'tjdgkr0719@khu.ac.kr','male', 20);
+-- INSERT INTO UserTable
+-- VALUES (1, 'test1', 'tjdgkr0719@khu.ac.kr','male', 20);
 
-INSERT INTO UserTable
-VALUES (2, 'test2', 'hsgpmh72@gmail.com','male', 40);
+-- INSERT INTO UserTable
+-- VALUES (2, 'test2', 'hsgpmh72@gmail.com','male', 40);
 
--- INSERT INTO TourTable
--- VALUES (3505386, 39, '서울특별시 중구 퇴계로6길 3-28 (회현동1가)', 
--- 'http://tong.visitkorea.or.kr/cms/resource/81/3505381_image2_1.jpg',
--- 'http://tong.visitkorea.or.kr/cms/resource/81/3505381_image3_1.jpg',
---  '11', '140', 'FD', 'FD01', 'FD010100');
+INSERT INTO TourTable (
+  contentid,
+  contenttypeid,
+  addr1,
+  title,
+  mapx,
+  mapy,
+  firstimage,
+  firstimage2,
+  lDongRegnCd,
+  lDongSignguCd,
+  lclsSystm1,
+  lclsSystm2,
+  lclsSystm3,
+  avg_rating
+) VALUES (
+  '3505386',
+  '39',
+  '서울특별시 중구 퇴계로6길 3-28 (회현동1가)',
+  '관광지 제목',
+  126.9780,
+  37.5665,
+  'http://tong.visitkorea.or.kr/cms/resource/81/3505381_image2_1.jpg',
+  'http://tong.visitkorea.or.kr/cms/resource/81/3505381_image3_1.jpg',
+  '11',
+  '140',
+  'FD',
+  'FD01',
+  'FD010100',
+  0.00
+);
 
 -- INSERT INTO TourTable
 -- VALUES (1000981, 14, '경상남도 통영시 해평5길 142-16', 
