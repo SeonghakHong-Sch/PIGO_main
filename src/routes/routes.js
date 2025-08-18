@@ -9,6 +9,7 @@ const Tour = require('../controllers/tourTBController.js');
 const analytics = require('../controllers/statisticsController.js');
 const login = require('../services/login.js');
 const middleware = require('../utils/middleWare.js');
+const review = require('../controllers/reviewController.js');
 
 
 //유저 관련 API
@@ -37,6 +38,12 @@ router.get('/tour/getHotplace/:order_by', analytics.getHotplace);
 
 //login
 router.get('/kakao/code',login.kakaoLogin);
+
+//리뷰 관련 API
+router.post('/review/writeReview',middleware.authToken,review.writeReview);
+router.post('/review/editReview',middleware.authToken,review.editReview);
+router.post('/review/deleteReview',middleware.authToken,review.deleteReview);
+router.get('/review/getReview',review.getReview);
 
 
 //testAPI
