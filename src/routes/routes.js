@@ -40,10 +40,10 @@ router.get('/tour/getHotplace/:order_by', analytics.getHotplace);
 router.get('/kakao/code',login.kakaoLogin);
 
 //리뷰 관련 API
-router.post('/review/writeReview',middleware.authToken,review.writeReview);
-router.post('/review/editReview',middleware.authToken,review.editReview);
-router.post('/review/deleteReview',middleware.authToken,review.deleteReview);
-router.get('/review/getReview',review.getReview);
+router.post('/review/write',middleware.authToken,review.writeReview);
+router.post('/review/edit',middleware.authToken,review.editReview);
+router.post('/review/delete',middleware.authToken,review.deleteReview);
+router.get('/review/get',review.getReview);
 
 
 //testAPI
