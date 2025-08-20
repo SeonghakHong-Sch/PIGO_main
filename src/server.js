@@ -4,6 +4,7 @@ const routes = require('./routes/routes');
 const https =require('https');
 const fs = require('fs');
 const path = require('path')
+const cors=require('cors');
 
 const httpsOptions = {
   key: fs.readFileSync(path.resolve(__dirname, '../ssl/server.key')),
@@ -11,6 +12,11 @@ const httpsOptions = {
 }
 
 const app = express();
+app.use(cors({
+  origin: 'https://njihun.github.io/',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use('/', routes);
 
