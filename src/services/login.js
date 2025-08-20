@@ -12,6 +12,7 @@ const kakao = { //환경변수 불러옴
 };
 
 exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao/code로 redirect됨
+    res.setHeader('Access-Control-Allow-Origin', '*');
     const authcode = req.query.code;
     let token;
     try {
