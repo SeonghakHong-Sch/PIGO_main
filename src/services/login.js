@@ -32,7 +32,7 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
         token = tokenResponse.data;
     } catch (e) {
         console.log(e);
-        return res.status(500).json(e.response ? e.response.data : e.message);
+        return res.status(500).json({message : '토큰 발급 실패',error : e});
     }
 
     let user;
@@ -47,26 +47,34 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
         });
         user = userResponse.data;
     } catch (e) {
-        console.log(e);
-        return res.status(500).json(e.response ? e.response.data : e.message);
+        console.log('카카오 토큰으로 유저 정보 받아오기 실패',e);
+        return res.status(500).json({message : '카카오 토큰으로 유저 정보 받아오기 실패',error:e});
     }
 
     //user.data 이용해서 뭔가뭔가 하기
-    console.log(user);
-    dbaccess.haveUser(connection,user.id)
+    try{
+        dbaccess.haveUser(connection,user.id)
         .then((exists)=>{
             if(!exists){
                 //db에 집어넣기
-                console.log('not exist!');
-                dbaccess.register(connection,user);
+                try{
+                    dbaccess.register(connection,user);
+                }catch(e){
+                    console.log('유저 삽입 오류',e);
+                    return res.status(500).json({message : '유저 삽입 오류', error : e});
+                }
+                console.log('user register : ',user.id);
             }
             else{
-                console.log('exist!');
+                console.log('user db에 존재 : ',user.id);
             }
         });
+    }catch(e){
+        console.log('유저 조회 존재 확인 불가',e);
+        return res.status(500).json({message : '유저 존재 확인 불가', error : e });
+    }
 
     const JWT = JWTToken.issueJWT(user);
-    console.log(JWT);
     res.json({ //토큰이랑 유저데이터 response
         PIGO_token: JWT,
         user

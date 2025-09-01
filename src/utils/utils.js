@@ -11,7 +11,6 @@ exports.issueJWT = (user) => {
         issuer: 'PIGO_Main'
     };
     //토큰 생성 & 반환
-    console.log('JWT 토큰 생성');
-    console.log(process.env.JWT_SECRET_KEY)
+    console.log('JWT 토큰 생성 : ',user.id);
     return JWT.sign(payload, process.env.JWT_SECRET_KEY, options);
 }

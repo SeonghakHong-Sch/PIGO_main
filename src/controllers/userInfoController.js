@@ -6,14 +6,15 @@ exports.getUserInfo=(req,res)=>{
 
     db.query(querySelect,[userID],(err,results)=>{
         if(err){
-            return res.status(500).json({error:err});
+            console.log('유저 정보 접근 오류',err);
+            return res.status(500).json({message:"유저 정보 접근 실패",error:err});
         }
         if(results.length==0){
-            return res.status(404).json({error:'유저 없음!'});
+            return res.status(404).json({message:"유저 없음",error:'존재하지 않는 유저'});
         }
-        console.log(results);//이거 ID를 알려줘야하나말아야하나
+        console.log(results);
 
-        const user=results[0];//PK니까 예외처리 안했긴했는데 해야하나
+        const user=results[0];
         return res.status(200).json({
             message:'유저 정보',
             ID:user.user_id,
@@ -50,7 +51,7 @@ exports.setUserInfo=async (req,res)=>{
     }
 
     if (updates.length === 0) {
-        return res.status(400).json({ error: '수정할 내용이 없습니다.' });
+        return res.status(400).json({ message : "수정 할 내용이 없습니다",error: '수정할 내용이 없습니다.' });
     }
     
     const update=updates.join(', ')
@@ -60,9 +61,10 @@ exports.setUserInfo=async (req,res)=>{
 
     try {
         const [result] = await db.promise().query(queryUpdate, params);
-        return res.status(200).json({ message: 'success', changedRows: result.changedRows });
+        return res.status(200).json({ message: '유저 정보 변경 성공', changedRows: result.changedRows });
     }
     catch (err) {
-        return res.status(500).json({ error: 'DB Update fail', detail: err });
+        console.log('유저정보 변경 오류',err);
+        return res.status(500).json({ message: '유저정보 변경 오류', error: err });
     }
 }

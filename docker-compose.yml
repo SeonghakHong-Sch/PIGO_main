@@ -19,19 +19,23 @@ services:
     depends_on:
       - db
     ports:
-      - 8080:8080
+      - 8443:8443
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - KAKAO_REST_API_KEY=${KAKAO_REST_API_KEY}
       - KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - RECOMMEND_SERVER_URL=${RECOMMEND_SERVER_URL}
+    restart: unless-stopped #이거 운영자가 직접 down 하는거 아니면 깨져도 다시 띄움
     develop: #컨테이너 띄우고 저장하면 실시간으로 반영해주는거
       watch:
         - action: sync
           path: . #어떤 파일 감시할건지 ㅇㅇ 폴더 경로
           target: /app
         - action: rebuild
-          path: package.json 
+          path: package.json
+    volumes:
+      - ./ssl:/app/ssl
 
 
 volumes:
