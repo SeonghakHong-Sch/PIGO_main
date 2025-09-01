@@ -5,6 +5,7 @@ const https =require('https');
 const fs = require('fs');
 const path = require('path')
 const cors=require('cors');
+const logMiddleware = require('./utils/middleWare.js');
 
 const httpsOptions = {
   key: fs.readFileSync(path.resolve(__dirname, '../ssl/server.key')),
@@ -13,10 +14,11 @@ const httpsOptions = {
 
 const app = express();
 app.use(cors({
-  origin: 'https://njihun.github.io/',
+  origin: ['https://njihun.github.io', 'http://39.124.122.12'],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+app.use(logMiddleware.logRequest);
 app.use(express.json());
 app.use('/', routes);
 

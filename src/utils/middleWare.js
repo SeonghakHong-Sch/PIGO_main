@@ -20,3 +20,9 @@ exports.authToken = (req, res, next) => {
         next();
     })
 }
+
+exports.logRequest = (req, res, next) => {
+  const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  console.log(`[${new Date().toISOString()}] ${clientIp} - ${req.method} ${req.originalUrl}`);
+  next();
+};
