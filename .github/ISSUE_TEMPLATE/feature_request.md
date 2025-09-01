@@ -1,13 +1,13 @@
 ---
-name: Bug report
-about: 버그 고쳐줘
+name: Feature request
+about: 기능 추가해줘
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
-## 버그내용
+## 기능내용
 
 ## 상세내용
 
