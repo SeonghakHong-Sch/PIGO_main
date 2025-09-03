@@ -92,14 +92,17 @@ CREATE TABLE IF NOT EXISTS ReviewTable(
 CREATE TABLE IF NOT EXISTS LikeTable(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 
-	user_id BIGINT,
+	user_id BIGINT NOT NULL,
 	CONSTRAINT fk_user_Like FOREIGN KEY (user_id) REFERENCES UserTable(user_id),
 
-	review_id INT,
+	review_id INT NOT NULL,
 	CONSTRAINT fk_review_Like FOREIGN KEY (review_id) REFERENCES ReviewTable(review_id),
 
-	is_like BIT DEFAULT 1
+	is_like INT DEFAULT 1
 ) CHARACTER SET utf8mb4;
+
+ALTER TABLE LikeTable MODIFY review_id INT NOT NULL;
+ALTER TABLE LikeTable MODIFY COLUMN is_like INT(1) DEFAULT 1;
 
 SET FOREIGN_KEY_CHECKS=0;
 

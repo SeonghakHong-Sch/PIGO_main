@@ -8,9 +8,9 @@ exports.like = async (req,res)=>{
 
     const body = req.body;
     const review_id=body.review_id;
-
+    console.log(review_id);
     const liked = await likeRecord.isLiked(userID,review_id,1);
-    
+
     if(liked){
         const queryDelete = 'DELETE FROM LikeTable WHERE user_id = ? AND review_id = ? AND is_like = ?';
         try{
@@ -24,7 +24,7 @@ exports.like = async (req,res)=>{
         const queryInsert = 'INSERT INTO LikeTable (user_id, review_id) VALUES (?, ?)';
         try{
             const [results] = await db.promise().query(queryInsert,[userID,review_id]);
-            return res.status(200).json({message : '좋아요 성공'});
+            return res.status(200).json({message : '좋아요 성공',detail:results});
         }catch(err){
             return res.status(500).json({message:'좋아요 오류',error:err});
         }
@@ -66,8 +66,8 @@ exports.getlikes = async (req,res)=>{
 
     const querySelect = `
     SELECT COUNT(
-    CASE WHEN review_id = ? THEN 1 END AND is_like = 1 THEN 1 END) AS like, 
-    COUNT(CASE WHEN review_id = ? THEN 1 END AND is_like = 0 THEN 1 END) AS dislike 
+    CASE WHEN review_id = ? AND is_like = 1 THEN 1 END) AS likes, 
+    COUNT(CASE WHEN review_id = ? AND is_like = 0 THEN 1 END) AS dislikes 
     FROM LikeTable
     `;
 
