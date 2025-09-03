@@ -44,9 +44,9 @@ exports.dislike = async (req,res)=>{
         const queryDelete = 'DELETE FROM LikeTable WHERE user_id = ? AND review_id = ? AND is_like = ?';
         try{
             const [results] = await db.promise().query(queryDelete,[userID,review_id,0]);
-            return res.status(200).json({message : '싫 삭제 성공'});
+            return res.status(200).json({message : '싫어요 삭제 성공'});
         }catch(err){
-            return res.status(500).json({message:'싫 삭제 오류',error:err});
+            return res.status(500).json({message:'싫어요 삭제 오류',error:err});
         }
     }
     else{
@@ -60,4 +60,22 @@ exports.dislike = async (req,res)=>{
     }
 }
 
+exports.getlikes = async (req,res)=>{
+    const query = req.query;
+    const review_id = query.review_id;
 
+    const querySelect = `
+    SELECT COUNT(
+    CASE WHEN review_id = ? THEN 1 END AND is_like = 1 THEN 1 END) AS like, 
+    COUNT(CASE WHEN review_id = ? THEN 1 END AND is_like = 0 THEN 1 END) AS dislike 
+    FROM LikeTable
+    `;
+
+    try{
+        const [rows] = await db.promise().query(querySelect,[review_id,review_id]);
+        return res.status(200).json({rows});
+    }catch(err){
+        console.log('좋아요/싫어요 조회 오류');
+        return res.status(500).json({message:'좋아요/싫어요 조회 오류',error:err});
+    }
+}
