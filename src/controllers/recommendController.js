@@ -29,6 +29,7 @@ exports.tourRecommend = async (req, res) => {
     try {
         const [userInfoRow] = await db.promise().query(userInfoSql, [userID]);
         userInfo = userInfoRow[0];
+        userInfo.user_sex = userInfo.user_sex === 'male' ? 1 : userInfo.user_sex === 'female' ? 0 : null;
     } catch (err) {
         console.log("추천 시 유저정보 접근 오류")
         return res.status(500).json({ message: "추천 시 유저정보 접근 오류", error: err });
@@ -68,10 +69,33 @@ exports.tourRecommend = async (req, res) => {
         }
     }
 
-    const response = await recommend.RecommendTourAPI(userInfo, interTourList, visitedTourList, etcData);
+    
+    try{
+        const response = await recommend.RecommendTourAPI(userInfo, interTourList, visitedTourList, etcData);
+        return res.status(200).json({
+            message: "추천결과",
+            result: response.data
+        });
+    }catch(err){
+        return res.status(500).json({
+            message: "관광지 추천API 에러",
+            error: err
+        });
+    }
+}
 
-    return res.status(200).json({
-        message: "추천 결과",
-        result: response
-    });
+exports.tourRandom = async (req, res) => {
+    console.log(1);
+    try {
+        const response = await recommend.RandomTourAPI();
+        return res.status(200).json({
+            message: "랜덤관광지 결과",
+            result: response.data.data
+        });
+    } catch (err) {
+        return res.status(500).json({
+            message: "랜덤API 에러",
+            error: err
+        });
+    }
 }

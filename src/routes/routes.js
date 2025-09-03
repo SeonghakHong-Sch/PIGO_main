@@ -32,6 +32,7 @@ router.post('/tour/setVisitedTour', middleware.authToken, visitedTour.setVisited
 
 //추천관련 API
 router.post('/recommend/getRecommendTour', middleware.authToken, recommend.tourRecommend);
+router.get('/recommend/getRandomTour', recommend.tourRandom);
 
 //핫플 조회
 router.get('/tour/getHotplace/:order_by', analytics.getHotplace);

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { json } = require('express');
 
 exports.RecommendTourAPI = async (user_info, interTourList, visitedTourList, etcData) => {
     try {
@@ -23,7 +24,20 @@ exports.RecommendTourAPI = async (user_info, interTourList, visitedTourList, etc
         console.log(process.env.RECOMMEND_SERVER_URL + '/get_tour_list');
         const response = await axios.post(process.env.RECOMMEND_SERVER_URL + '/get_tour_list', data);
         return response;
-    } catch(err) {
+    } catch (err) {
+        throw err;
         //console.error(err);
     }
+}
+
+exports.RandomTourAPI = async () => {
+
+    try {
+        console.log('추천서버 API URL : '+process.env.RECOMMEND_SERVER_URL + '/random/get_tourlist');
+        const response = await axios.get(process.env.RECOMMEND_SERVER_URL + '/random/get_tourlist');
+        return response;
+    } catch (err) {
+        throw err
+    }
+
 }
