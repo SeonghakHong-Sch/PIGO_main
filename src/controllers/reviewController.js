@@ -96,8 +96,9 @@ exports.deleteReview = async (req, res) => {
 
 
 exports.getReview = async (req, res) => {
-    const requestType = req.query.requestType;
     const query = req.query;
+    const requestType = query.requestType;
+
 
     try {
         let querySelect = '';

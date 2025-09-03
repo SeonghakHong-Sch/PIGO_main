@@ -10,6 +10,7 @@ const analytics = require('../controllers/statisticsController.js');
 const login = require('../services/login.js');
 const middleware = require('../utils/middleWare.js');
 const review = require('../controllers/reviewController.js');
+const likes = require('../controllers/likeController.js');
 
 
 //유저 관련 API
@@ -45,6 +46,11 @@ router.post('/review/write',middleware.authToken,review.writeReview);
 router.post('/review/edit',middleware.authToken,review.editReview);
 router.post('/review/delete',middleware.authToken,review.deleteReview);
 router.get('/review/get',review.getReview);
+
+//좋아요 관련 API
+router.post('/likes/like',middleware.authToken,likes.like);
+router.post('/likes/dislike',middleware.authToken,likes.dislike);
+router.get('/likes/get',likes.getlikes);
 
 
 //testAPI
