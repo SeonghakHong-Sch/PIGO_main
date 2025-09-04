@@ -10,7 +10,7 @@ exports.updateAverage = async (tour_id) => {
             const [result] = await db.promise().query(queryUpdate, [avg_rating, tour_id]);
             console.log("관광지 리뷰 평균 갱신 성공");
         } catch (err) {
-            console.log('관광지 리뷰 평균 갱신 실패');
+            console.log('관광지 리뷰 평균 갱신 실패',err);
         }
     } catch (err) {
         console.log('관광지 리뷰 평균 구하기 실패 : ', err);

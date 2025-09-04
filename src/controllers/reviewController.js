@@ -16,7 +16,7 @@ exports.writeReview = async (req, res) => {
         await reviewAver.updateAverage(tour_id);
         return res.status(200).json({ message: '리뷰 작성 성공', changedRows: results.changedRows });
     } catch (err) {
-        console.log('리뷰 작성 오류');
+        console.log('리뷰 작성 오류',err);
         return res.status(500).json({ message: '리뷰 작성 오류', error: err });
     }
 }
@@ -57,7 +57,7 @@ exports.editReview = async (req, res) => { //필터 쿼리문써서
         }
         return res.status(200).json({ message: '리뷰 수정 성공', changedRows: result.changedRows });
     } catch (err) {
-        console.log('리뷰 수정 오류')
+        console.log('리뷰 수정 오류',err);
         return res.status(500).json({ message: '리뷰 수정 오류', error: err });
     }
 }
@@ -89,7 +89,7 @@ exports.deleteReview = async (req, res) => {
         await reviewAver.updateAverage(tour_id);
         return res.status(200).json({ message: '리뷰 삭제 성공' });
     } catch (err) {
-        console.log('리뷰 삭제 오류');
+        console.log('리뷰 삭제 오류',err);
         return res.status(500).json({ message: '리뷰 삭제 오류', error: err });
     }
 }
@@ -143,7 +143,7 @@ exports.getReview = async (req, res) => {
         return res.json(rows);
 
     } catch (err) {
-        console.log('리뷰 정보 요청 오류');
+        console.log('리뷰 정보 요청 오류',err);
         return res.status(500).json({ message: '리뷰 요청 오류', error: err });
     }
 }
