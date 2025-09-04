@@ -10,6 +10,15 @@ exports.writeReview = async (req, res) => {
     const content = body.content;
     const rating = body.rating;
 
+    if(tour_id==null || content == null || rating == null){
+        console.log('리뷰 작성 정보 부족',tour_id,content,rating);
+        return res.status(400).json({message : '리뷰 작성 정보 부족'});
+    }
+    else if(rating>5 || rating < 1){
+        console.log('리뷰 점수 이상',rating);
+        return res.status(400).json({message : '리뷰 점수 이상'});
+    }
+
     const insertQuery = 'INSERT INTO ReviewTable (user_id, tour_id, content, rating) VALUES (?, ?, ?, ?)';
     try {
         const [results] = await db.promise().query(insertQuery, [userID, tour_id, content, rating]);
@@ -46,6 +55,9 @@ exports.editReview = async (req, res) => { //필터 쿼리문써서
     }
     if (new_rating == null) {
         new_rating = review.rating;
+    }else if(new_rating>5 || newrating < 1){
+        console.log('리뷰 수정 점수 이상',new_rating);
+        return res.status(400).json({message : '리뷰 수정 점수 이상'});
     }
 
     const updateQuery = 'UPDATE ReviewTable SET content = ? , rating = ?  WHERE review_id = ?';
