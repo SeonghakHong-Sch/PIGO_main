@@ -24,7 +24,7 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
                 code: authcode
             }),
             {
-                headers: {
+                headers: {  
                     "content-type": "application/x-www-form-urlencoded",
                 }
             }

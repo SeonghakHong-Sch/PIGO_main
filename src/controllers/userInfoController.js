@@ -51,7 +51,7 @@ exports.setUserInfo=async (req,res)=>{
     }
 
     if (updates.length === 0) {
-        return res.status(400).json({ message : "수정 할 내용이 없습니다",error: '수정할 내용이 없습니다.' });
+        return res.status(400).json({ message : "수정할 내용이 없습니다",error: '수정할 내용이 없습니다.' });
     }
     
     const update=updates.join(', ')
