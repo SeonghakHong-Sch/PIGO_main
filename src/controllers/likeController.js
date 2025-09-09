@@ -77,7 +77,7 @@ exports.getlikes = async (req, res) => {
 
     try {
         const [rows] = await db.promise().query(querySelect, [review_id, review_id]);
-        return res.status(200).json({ rows });
+        return res.status(200).json(rows);
     } catch (err) {
         console.log('좋아요/싫어요 조회 오류', err);
         return res.status(500).json({ message: '좋아요/싫어요 조회 오류', error: err });
