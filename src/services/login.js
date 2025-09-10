@@ -50,12 +50,13 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
         console.log('카카오 토큰으로 유저 정보 받아오기 실패', e);
         return res.status(500).json({ message: '카카오 토큰으로 유저 정보 받아오기 실패', error: e });
     }
-
+    let existing;
     //user.data 이용해서 뭔가뭔가 하기
     try {
         dbaccess.haveUser(connection, user.id)
             .then((exists) => {
                 if (!exists) {
+                    existing = false;
                     //db에 집어넣기
                     try {
                         dbaccess.register(connection, user);
@@ -66,6 +67,7 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
                     console.log('user register : ', user.id);
                 }
                 else {
+                    existing = true;
                     console.log('user db에 존재 : ', user.id);
                 }
             });
@@ -77,6 +79,7 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
     const JWT = JWTToken.issueJWT(user);
     res.json({ //토큰이랑 유저데이터 response
         PIGO_token: JWT,
-        user
+        user,
+        "existing" :existing
     });
 };
