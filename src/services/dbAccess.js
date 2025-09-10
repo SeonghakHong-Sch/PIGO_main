@@ -1,3 +1,5 @@
+const db = require('../config/db.js')
+
 exports.haveUser=async (connection,userID)=>{
     //예외처리???
     const [have]=await connection.promise().query(
@@ -17,4 +19,64 @@ exports.register=async (connection,user)=>{
         insertQuery,[id,name,email]
     );
     console.log(rows);
+}
+
+exports.deleteIntertourByUserId = async (user_id)=>{
+    const queryDelete = 'DELETE FROM InterTourTable WHERE user_id = ?';
+    try{
+        const [result] = await db.promise().query(queryDelete,[user_id]);
+        console.log('유저 관심관광지 전체삭제 성공 changedRows : ',result.changedRows);
+        return true;
+    }catch(err){
+        console.log('유저 관심관광지 전체삭제 오류',err);
+        return false;
+    }
+}
+
+exports.deleteInterLocationByUserId = async (user_id)=>{
+    const queryDelete = 'DELETE FROM InterLocationTable WHERE user_id = ?';
+    try{
+        const [result] = await db.promise().query(queryDelete,[user_id]);
+        console.log('유저 관심지역 전체삭제 성공 changedRows : ',result.changedRows);
+        return true;
+    }catch(err){
+        console.log('유저 관심지역 전체삭제 오류',err);
+        return false;
+    }
+}
+
+exports.deleteVisitedTourByUserId = async (user_id)=>{
+    const queryDelete = 'DELETE FROM VisitedTourTable WHERE user_id = ?';
+    try{
+        const [result] = await db.promise().query(queryDelete,[user_id]);
+        console.log('유저 방문지역 전체삭제 성공 changedRows : ',result.changedRows);
+        return true;
+    }catch(err){
+        console.log('유저 방문지역 전체삭제 오류',err);
+        return false;
+    }
+}
+
+exports.deleteReviewByUserId = async (user_id)=>{
+    const queryDelete = 'DELETE FROM ReviewTable WHERE user_id = ?';
+    try{
+        const [result] = await db.promise().query(queryDelete,[user_id]);
+        console.log('유저 리뷰 전체삭제 성공 changedRows : ',result.changedRows);
+        return true;
+    }catch(err){
+        console.log('유저 리뷰 전체삭제 오류',err);
+        return false;
+    }
+}
+
+exports.deleteLikesByUserId = async (user_id)=>{
+    const queryDelete = 'DELETE FROM LikeTable WHERE user_id = ?';
+    try{
+        const [result] = await db.promise().query(queryDelete,[user_id]);
+        console.log('유저 좋아요 전체삭제 성공 changedRows : ',result.changedRows);
+        return true;
+    }catch(err){
+        console.log('유저 좋아요 전체삭제 오류',err);
+        return false;
+    }
 }
