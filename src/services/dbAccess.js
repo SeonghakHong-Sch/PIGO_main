@@ -1,8 +1,8 @@
 const db = require('../config/db.js')
 
-exports.haveUser=async (connection,userID)=>{
+exports.haveUser = async (connection, userID) => {
     //예외처리???
-    const [have]=await connection.promise().query(
+    const [have] = await connection.promise().query(
         'SELECT EXISTS(SELECT 1 FROM UserTable WHERE user_id = ?) AS exist',
         [userID]
     );
@@ -10,73 +10,79 @@ exports.haveUser=async (connection,userID)=>{
 }
 
 
-exports.register=async (connection,user)=>{
-    const id=user.id;
-    const name=user.properties.nickname;
-    const email=user.kakao_account.email;
-    const insertQuery='INSERT INTO UserTable (user_id, user_name, user_email) VALUES (?, ?, ?)';
-    const [rows,fields] = await connection.promise().query(
-        insertQuery,[id,name,email]
+exports.register = async (connection, user) => {
+    const id = user.id;
+    const name = user.properties.nickname;
+    const email = user.kakao_account.email;
+    const insertQuery = 'INSERT INTO UserTable (user_id, user_name, user_email) VALUES (?, ?, ?)';
+    const [rows, fields] = await connection.promise().query(
+        insertQuery, [id, name, email]
     );
     console.log(rows);
 }
 
-exports.deleteIntertourByUserId = async (user_id)=>{
+exports.deleteIntertourByUserId = async (user_id) => {
     const queryDelete = 'DELETE FROM InterTourTable WHERE user_id = ?';
-    try{
-        const [result] = await db.promise().query(queryDelete,[user_id]);
-        console.log('유저 관심관광지 전체삭제 성공 changedRows : ',result.changedRows);
+    try {
+        const [result] = await db.promise().query(queryDelete, [user_id]);
+        console.log('유저 관심관광지 전체삭제 성공 changedRows : ', result.changedRows);
         return true;
-    }catch(err){
-        console.log('유저 관심관광지 전체삭제 오류',err);
+    } catch (err) {
+        console.log('유저 관심관광지 전체삭제 오류', err);
         return false;
     }
 }
 
-exports.deleteInterLocationByUserId = async (user_id)=>{
+exports.deleteInterLocationByUserId = async (user_id) => {
     const queryDelete = 'DELETE FROM InterLocationTable WHERE user_id = ?';
-    try{
-        const [result] = await db.promise().query(queryDelete,[user_id]);
-        console.log('유저 관심지역 전체삭제 성공 changedRows : ',result.changedRows);
+    try {
+        const [result] = await db.promise().query(queryDelete, [user_id]);
+        console.log('유저 관심지역 전체삭제 성공 changedRows : ', result.changedRows);
         return true;
-    }catch(err){
-        console.log('유저 관심지역 전체삭제 오류',err);
+    } catch (err) {
+        console.log('유저 관심지역 전체삭제 오류', err);
         return false;
     }
 }
 
-exports.deleteVisitedTourByUserId = async (user_id)=>{
+exports.deleteVisitedTourByUserId = async (user_id) => {
     const queryDelete = 'DELETE FROM VisitedTourTable WHERE user_id = ?';
-    try{
-        const [result] = await db.promise().query(queryDelete,[user_id]);
-        console.log('유저 방문지역 전체삭제 성공 changedRows : ',result.changedRows);
+    try {
+        const [result] = await db.promise().query(queryDelete, [user_id]);
+        console.log('유저 방문지역 전체삭제 성공 changedRows : ', result.changedRows);
         return true;
-    }catch(err){
-        console.log('유저 방문지역 전체삭제 오류',err);
+    } catch (err) {
+        console.log('유저 방문지역 전체삭제 오류', err);
         return false;
     }
 }
 
-exports.deleteReviewByUserId = async (user_id)=>{
-    const queryDelete = 'DELETE FROM ReviewTable WHERE user_id = ?';
-    try{
-        const [result] = await db.promise().query(queryDelete,[user_id]);
-        console.log('유저 리뷰 전체삭제 성공 changedRows : ',result.changedRows);
+exports.deleteReviewByUserId = async (user_id) => {
+    const queryUpdate = 'Update ReviewTable SET user_id = -1 WHERE user_id = ?';
+    try {
+        const [result] = await db.promise().query(queryUpdate, [user_id]);
+        console.log('유저 리뷰 전체삭제 성공 changedRows : ', result.changedRows);
         return true;
-    }catch(err){
-        console.log('유저 리뷰 전체삭제 오류',err);
+    } catch (err) {
+        console.log('유저 리뷰 전체삭제 오류', err);
         return false;
     }
 }
 
-exports.deleteLikesByUserId = async (user_id)=>{
-    const queryDelete = 'DELETE FROM LikeTable WHERE user_id = ?';
-    try{
-        const [result] = await db.promise().query(queryDelete,[user_id]);
-        console.log('유저 좋아요 전체삭제 성공 changedRows : ',result.changedRows);
+exports.deleteLikesByUserId = async (user_id) => {
+    const queryUpdate = 'Update LikeTable SET user_id = -1 WHERE user_id = ?';
+    try {
+        const [result] = await db.promise().query(queryUpdate, [user_id]);
+        console.log('유저 좋아요 전체삭제 성공 changedRows : ', result.changedRows);
         return true;
-    }catch(err){
-        console.log('유저 좋아요 전체삭제 오류',err);
+    } catch (err) {
+        console.log('유저 좋아요 전체삭제 오류', err);
         return false;
     }
+}
+
+exports.deleteUser = async (user_id) => {
+    const queryDelete = 'DELETE FROM UserTable WHERE user_id = ?';
+    const [result] = await db.promise().query(queryDelete, [user_id]);
+    return result;
 }
