@@ -83,3 +83,31 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
         "existing" :existing
     });
 };
+
+exports.quit = async (req,res) =>{
+    const user = req.user;
+    const userID = user.user_id;
+    
+    let errorList = [];
+    if(!(await dbaccess.deleteLikesByUserId(userID))){
+        errorList.push('Likes');
+    }
+    if(!(await dbaccess.deleteReviewByUserId(userID))){
+        errorList.push('Review');
+    }
+    if(!(await dbaccess.deleteIntertourByUserId(userID))){
+        errorList.push('InterTour');
+    }
+    if(!(await dbaccess.deleteInterLocationByUserId(userID))){
+        errorList.push('InterLocation');
+    }
+    if (!(await dbaccess.deleteVisitedTourByUserId(userID))){
+        errorList.push('VisitedTour');
+    }
+    if (errorList.length!=0){
+        res.status(500).json({message : '회원탈퇴 중 오류',errors_in : errorList });
+    }
+    else{
+        res.status(200).json({message : '회원탈퇴 성공',user_id:userID});
+    }//탈퇴한 유저가 JWT 사용해서 조회는 다 할수 있을듯 (Table 추가 삭제 변경은 fk라 못할거고)
+}
