@@ -40,6 +40,8 @@ router.get('/tour/getHotplace/:order_by', analytics.getHotplace);
 
 //login
 router.get('/kakao/code',login.kakaoLogin);
+//quit
+router.post('/quit',middleware.authToken,login.quit);
 
 //리뷰 관련 API
 router.post('/review/write',middleware.authToken,review.writeReview);

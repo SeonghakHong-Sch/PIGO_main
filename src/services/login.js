@@ -80,6 +80,40 @@ exports.kakaoLogin = async (req, res) => { //프론트에서 로그인 시 kakao
     res.json({ //토큰이랑 유저데이터 response
         PIGO_token: JWT,
         user,
-        "existing" :existing
+        "existing": existing
     });
 };
+
+exports.quit = async (req, res) => {
+    const user = req.user;
+    const userID = user.user_id;
+
+    let errorList = [];
+    if (!(await dbaccess.deleteLikesByUserId(userID))) {
+        errorList.push('Likes');
+    }
+    if (!(await dbaccess.deleteReviewByUserId(userID))) {
+        errorList.push('Review');
+    }
+    if (!(await dbaccess.deleteIntertourByUserId(userID))) {
+        errorList.push('InterTour');
+    }
+    if (!(await dbaccess.deleteInterLocationByUserId(userID))) {
+        errorList.push('InterLocation');
+    }
+    if (!(await dbaccess.deleteVisitedTourByUserId(userID))) {
+        errorList.push('VisitedTour');
+    }
+    if (errorList.length != 0) {
+        console.log('회원탈퇴 중 오류',errorList);
+        return res.status(500).json({ message: '회원탈퇴 중 오류', errors_in: errorList });
+    }
+    else {
+        try {
+            const result = await dbaccess.deleteUser(userID);
+            return res.status(200).json({ message: '회원탈퇴 성공', changedRows: result.changedRows });
+        } catch (err) {
+            return res.status(500).json({ message: '회원 탈퇴 유저삭제 오류', error: err });
+        }
+    }
+}
