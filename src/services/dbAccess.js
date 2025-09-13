@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 const db = require('../config/db.js')
-=======
-const db = require('../config/db.js');
->>>>>>> bf29149 (feat: Add PlanRecommend API & dbAccess code refactoring)
 
 exports.haveUser = async (connection, userID) => {
     //예외처리???
@@ -25,7 +21,6 @@ exports.register = async (connection, user) => {
     console.log(rows);
 }
 
-<<<<<<< HEAD
 exports.deleteIntertourByUserId = async (user_id) => {
     const queryDelete = 'DELETE FROM InterTourTable WHERE user_id = ?';
     try {
@@ -90,7 +85,8 @@ exports.deleteUser = async (user_id) => {
     const queryDelete = 'DELETE FROM UserTable WHERE user_id = ?';
     const [result] = await db.promise().query(queryDelete, [user_id]);
     return result;
-=======
+}
+
 exports.getUserInfo = async (userID) => {
     const userInfoSql = "SELECT * FROM UserTable WHERE user_id = ?";
     let userInfo;
@@ -145,5 +141,4 @@ exports.getTourInfo = async (TourIDList) => {
         console.log("TourTable 접근 오류, dbAccess.js/getTourInfo");
         throw err;
     }
->>>>>>> bf29149 (feat: Add PlanRecommend API & dbAccess code refactoring)
 }
