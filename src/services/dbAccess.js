@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const db = require('../config/db.js')
+=======
+const db = require('../config/db.js');
+>>>>>>> bf29149 (feat: Add PlanRecommend API & dbAccess code refactoring)
 
 exports.haveUser = async (connection, userID) => {
     //예외처리???
@@ -21,6 +25,7 @@ exports.register = async (connection, user) => {
     console.log(rows);
 }
 
+<<<<<<< HEAD
 exports.deleteIntertourByUserId = async (user_id) => {
     const queryDelete = 'DELETE FROM InterTourTable WHERE user_id = ?';
     try {
@@ -85,4 +90,60 @@ exports.deleteUser = async (user_id) => {
     const queryDelete = 'DELETE FROM UserTable WHERE user_id = ?';
     const [result] = await db.promise().query(queryDelete, [user_id]);
     return result;
+=======
+exports.getUserInfo = async (userID) => {
+    const userInfoSql = "SELECT * FROM UserTable WHERE user_id = ?";
+    let userInfo;
+
+    try {
+        const [userInfoRow] = await db.promise().query(userInfoSql, [userID]);
+        userInfo = userInfoRow[0];
+        userInfo.user_sex = userInfo.user_sex === 'male' ? 1 : userInfo.user_sex === 'female' ? 0 : null;
+        return userInfo;
+    } catch (err) {
+        console.log("유저정보 접근 오류, dbAccess.js/getUserInfo")
+        throw err;
+    }
+}
+
+exports.getInterTour = async (userID) => {
+    const interTourSql = "SELECT tour_id FROM InterTourTable WHERE user_id = ?";
+    let interTourIDList;
+
+    try {
+        [interTourIDList] = await db.promise().query(interTourSql, [userID]);
+        interTourIDList = interTourIDList.map(item => item.tour_id) || [];
+        return interTourIDList;
+    } catch (err) {
+        console.log("interTour 접근 오류, dbAccess.js/getInterTour");
+        throw err;
+    }
+}
+
+exports.getVisitedTour = async (userID) => {
+    const visitedTourSql = "SELECT tour_id FROM VisitedTourTable WHERE user_id = ?"
+    let visitedTourIDList;
+
+    try {
+        [visitedTourIDList] = await db.promise().query(visitedTourSql, [userID]);
+        visitedTourIDList = visitedTourIDList.map(item => item.tour_id) || [];
+        return visitedTourIDList;
+    } catch (err) {
+        console.log("visitedTable 접근 오류, dbAccess.js/getVisitedTour");
+        throw err;
+    }
+}
+
+exports.getTourInfo = async (TourIDList) => {
+    const TourTBSql = "SELECT * FROM TourTable WHERE contentid IN (?)"
+    let TourList;
+
+    try {
+        [TourList] = await db.promise().query(TourTBSql, [TourIDList]);
+        return TourList;
+    } catch (err) {
+        console.log("TourTable 접근 오류, dbAccess.js/getTourInfo");
+        throw err;
+    }
+>>>>>>> bf29149 (feat: Add PlanRecommend API & dbAccess code refactoring)
 }
