@@ -19,7 +19,7 @@ services:
     depends_on:
       - db
     ports:
-      - 8443:8443
+      - 443:443
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - KAKAO_REST_API_KEY=${KAKAO_REST_API_KEY}

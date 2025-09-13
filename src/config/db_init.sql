@@ -114,6 +114,16 @@ SET FOREIGN_KEY_CHECKS=0;
 -- INSERT INTO UserTable
 -- VALUES (2, 'test2', 'hsgpmh72@gmail.com','male', 40);
 
+INSERT INTO UserTable(
+	user_id,
+	user_name,
+	user_email
+)VALUES(
+	-1,
+	"DELETED_USER",
+	"DELETED_USER"
+)
+
 INSERT INTO TourTable (
   contentid,
   contenttypeid,

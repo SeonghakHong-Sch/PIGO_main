@@ -7,6 +7,7 @@ async function haveTour(contentid) {
 
 exports.inputTour = async (req, res) => {
     const tourData = req.body.data; //body 저장
+    const sql = 'INSERT INTO (contentid, contenttypeid, addr1, title, mapx, mapy, firstimage, firstimage2, lDongRegnCd, lDongSignguCd, lclsSystm1, lclsSystm2, lclsSystm3) TourTable VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
 
     if (!Array.isArray(tourData) || tourData.length === 0) {
         return res.status(400).json({
@@ -37,7 +38,7 @@ exports.inputTour = async (req, res) => {
             ];
 
             try {
-                const [result] = await db.promise().query('INSERT INTO TourTable VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', parameters);
+                const [result] = await db.promise().query(sql, parameters);
                 rightResults.push(item.contentid);
             } catch (err) {
                 console.log('투어테이블 추가 오류', item.contentid, err);

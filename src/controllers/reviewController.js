@@ -10,13 +10,34 @@ exports.writeReview = async (req, res) => {
     const content = body.content;
     const rating = body.rating;
 
+    if (tour_id == null || content == null || rating == null) {
+        console.log('리뷰 작성 정보 부족', tour_id, content, rating);
+        return res.status(400).json({ message: '리뷰 작성 정보 부족' });
+    }
+    else if (rating > 5 || rating < 1) {
+        console.log('리뷰 점수 이상', rating);
+        return res.status(400).json({ message: '리뷰 점수 이상' });
+    }
+
+    const querySelect = 'SELECT EXISTS(SELECT 1 FROM ReviewTable WHERE user_id = ? AND tour_id = ? ) AS exist';
+    try {
+        const [have] = await db.promise().query(querySelect, [userID, tour_id]);
+        console.log(have[0].exist);
+        if(have[0].exist){
+            console.log(have[0].exist);
+            return res.status(400).json({message : "리뷰가 이미 존재합니다"});
+        }
+    } catch (err) {
+        console.log('리뷰 존재여부 확인 오류', err);
+    }
+
     const insertQuery = 'INSERT INTO ReviewTable (user_id, tour_id, content, rating) VALUES (?, ?, ?, ?)';
     try {
         const [results] = await db.promise().query(insertQuery, [userID, tour_id, content, rating]);
         await reviewAver.updateAverage(tour_id);
         return res.status(200).json({ message: '리뷰 작성 성공', changedRows: results.changedRows });
     } catch (err) {
-        console.log('리뷰 작성 오류');
+        console.log('리뷰 작성 오류', err);
         return res.status(500).json({ message: '리뷰 작성 오류', error: err });
     }
 }
@@ -30,14 +51,14 @@ exports.editReview = async (req, res) => { //필터 쿼리문써서
     const new_content = body.new_content;
     const new_rating = body.new_rating;
 
-    const [reviewData] = await db.promise().query('SELECT user_id, tour_id FROM ReviewTable WHERE review_id = ?', [review_id]);
+    const [reviewData] = await db.promise().query('SELECT * FROM ReviewTable WHERE review_id = ?', [review_id]);
     const review = reviewData[0];
 
     if (!review) {
         return res.status(400).json({ message: "리뷰 미존재" });
     }
     else if (userID != review.user_id || review_id != review.review_id) {
-        console.log("리뷰 수정 정보 불일치, JWT 유저id : ", userID, " 리뷰 유저id : ", review.user_id);
+        console.log("리뷰 수정 정보 불일치, JWT 유저id : ", userID, " 리뷰 유저id : ", review.review_id);
         return res.status(400).json({ message: "리뷰 수정 정보 불일치" })
     }
 
@@ -46,18 +67,21 @@ exports.editReview = async (req, res) => { //필터 쿼리문써서
     }
     if (new_rating == null) {
         new_rating = review.rating;
+    } else if (new_rating > 5 || newrating < 1) {
+        console.log('리뷰 수정 점수 이상', new_rating);
+        return res.status(400).json({ message: '리뷰 수정 점수 이상' });
     }
 
-    const updateQuery = 'UPDATE ReviewTable SET content = ? , rating = ?  WHERE id = ?';
+    const updateQuery = 'UPDATE ReviewTable SET content = ? , rating = ?  WHERE review_id = ?';
 
     try {
         const [result] = await db.promise().query(updateQuery, [new_content, new_rating, review_id]);
         if (new_rating != review.rating) {
-            await reviewAver.updateAverage(tour_id);
+            await reviewAver.updateAverage(review.tour_id);
         }
         return res.status(200).json({ message: '리뷰 수정 성공', changedRows: result.changedRows });
     } catch (err) {
-        console.log('리뷰 수정 오류')
+        console.log('리뷰 수정 오류', err);
         return res.status(500).json({ message: '리뷰 수정 오류', error: err });
     }
 }
@@ -71,7 +95,7 @@ exports.deleteReview = async (req, res) => {
     const review_id = body.review_id;
 
 
-    const [reviewData] = await db.promise().query('SELECT user_id, tour_id FROM ReviewTable WHERE review_id = ?', [review_id]);
+    const [reviewData] = await db.promise().query('SELECT * FROM ReviewTable WHERE review_id = ?', [review_id]);
     const review = reviewData[0];
 
     if (!review) {
@@ -82,14 +106,14 @@ exports.deleteReview = async (req, res) => {
         return res.status(400).json({ message: "리뷰 삭제 정보 불일치" })
     }
 
-    const updateQuery = 'UPDATE ReviewTable SET is_deleted = 1 WHERE id = ?';
+    const updateQuery = 'UPDATE ReviewTable SET is_deleted = 1 WHERE review_id = ?';
 
     try {
         const [result] = await db.promise().query(updateQuery, [review_id]);
-        await reviewAver.updateAverage(tour_id);
+        await reviewAver.updateAverage(review.tour_id);
         return res.status(200).json({ message: '리뷰 삭제 성공' });
     } catch (err) {
-        console.log('리뷰 삭제 오류');
+        console.log('리뷰 삭제 오류', err);
         return res.status(500).json({ message: '리뷰 삭제 오류', error: err });
     }
 }
@@ -143,7 +167,7 @@ exports.getReview = async (req, res) => {
         return res.json(rows);
 
     } catch (err) {
-        console.log('리뷰 정보 요청 오류');
+        console.log('리뷰 정보 요청 오류', err);
         return res.status(500).json({ message: '리뷰 요청 오류', error: err });
     }
 }

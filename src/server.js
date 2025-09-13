@@ -23,7 +23,7 @@ app.use(express.json());
 app.use('/', routes);
 
 
-https.createServer(httpsOptions, app).listen(8443, () => {
+https.createServer(httpsOptions, app).listen(443, () => {
 })
 
 // const server = app.listen(8443, () => {
