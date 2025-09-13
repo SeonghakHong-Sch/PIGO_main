@@ -1,4 +1,6 @@
 const db = require('../config/db.js');
+const dbAccess = require('../services/dbAccess.js');
+const recommend = require('../services/recommend.js');
 
 async function haveTour(contentid) {
     const [isHave] = await db.promise().query('SELECT EXISTS(SELECT 1 FROM TourTable WHERE contentid = ?) AS exist', [contentid]);
@@ -7,7 +9,7 @@ async function haveTour(contentid) {
 
 exports.inputTour = async (req, res) => {
     const tourData = req.body.data; //body 저장
-    const sql = 'INSERT INTO (contentid, contenttypeid, addr1, title, mapx, mapy, firstimage, firstimage2, lDongRegnCd, lDongSignguCd, lclsSystm1, lclsSystm2, lclsSystm3) TourTable VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
+    const sql = 'INSERT INTO TourTable (contentid, contenttypeid, addr1, title, mapx, mapy, firstimage, firstimage2, lDongRegnCd, lDongSignguCd, lclsSystm1, lclsSystm2, lclsSystm3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
 
     if (!Array.isArray(tourData) || tourData.length === 0) {
         return res.status(400).json({
@@ -87,7 +89,7 @@ exports.getTour = async (req, res) => {
 
     try {
         const [result] = await db.promise().query(sql, [contentidList, contentidList]);
-        
+
         return res.status(200).json({
             count: result.length,
             data: result
@@ -96,6 +98,27 @@ exports.getTour = async (req, res) => {
     } catch (err) {
         return res.status(500).json({
             message: "관광지 조회 오류",
+            error: err
+        });
+    }
+
+}
+
+exports.getTourDetail = async (req, res) => {
+    const contentId = req.query.contentId;
+
+    try {
+        const response = await recommend.TourDetailAPI(contentId);
+        const test = await dbAccess.getTourInfo([contentId]);
+        console.log(test);
+        return res.status(200).json({
+            message: "관광지 상세정보 조회 성공",
+            data: response.data
+        })
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            message: "관광지 상세정보 조회 실패",
             error: err
         });
     }
