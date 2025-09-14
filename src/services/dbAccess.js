@@ -58,7 +58,7 @@ exports.deleteVisitedTourByUserId = async (user_id) => {
 }
 
 exports.deleteReviewByUserId = async (user_id) => {
-    const queryUpdate = 'Update ReviewTable SET user_id = -1 WHERE user_id = ?';
+    const queryUpdate = 'Update ReviewTable SET user_id = -1, is_deleted = 1 WHERE user_id = ?';
     try {
         const [result] = await db.promise().query(queryUpdate, [user_id]);
         console.log('유저 리뷰 전체삭제 성공 changedRows : ', result.changedRows);
