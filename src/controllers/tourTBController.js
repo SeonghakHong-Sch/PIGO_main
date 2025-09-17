@@ -1,6 +1,7 @@
 const db = require('../config/db.js');
 const dbAccess = require('../services/dbAccess.js');
 const recommend = require('../services/recommend.js');
+const statistics = require('../services/tourAnalytics.js');
 
 async function haveTour(contentid) {
     const [isHave] = await db.promise().query('SELECT EXISTS(SELECT 1 FROM TourTable WHERE contentid = ?) AS exist', [contentid]);
@@ -108,12 +109,20 @@ exports.getTourDetail = async (req, res) => {
     const contentId = req.query.contentId;
 
     try {
+        const tourInfo = await dbAccess.getTourInfo([contentId]);
         const response = await recommend.TourDetailAPI(contentId);
-        const test = await dbAccess.getTourInfo([contentId]);
-        console.log(test);
+        const tourStatistic = await statistics.tourStatistics(contentId);
+        //console.log(tourInfo, response.data, tourStatistic)
+        //Object.assign({}, , )
+
+        const result = {
+            tourInfo: tourInfo,
+            detail: response.data,
+            statistics: tourStatistic
+        };
         return res.status(200).json({
             message: "관광지 상세정보 조회 성공",
-            data: response.data
+            data: result
         })
     } catch (err) {
         console.log(err);
