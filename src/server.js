@@ -14,7 +14,7 @@ const httpsOptions = {
 
 const app = express();
 app.use(cors({
-  origin: ['https://njihun.github.io', 'http://39.124.122.12'],
+  origin: ['https://njihun.github.io', 'http://39.124.122.12', 'http://127.0.0.1:5500'],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
