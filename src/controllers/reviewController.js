@@ -131,20 +131,24 @@ exports.getReview = async (req, res) => {
 
         if (requestType == 'random') {
             querySelect = `
-                SELECT r.*, u.user_name
+                SELECT r.*, u.user_name, COUNT(CASE WHEN l.is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN l.is_like = 0 THEN 1 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
+                LEFT JOIN LikeTable l ON r.review_id = l.review_id
                 WHERE r.is_deleted = 0 AND r.user_id != -1
-                ORDER BY RAND() LIMIT 30
+                GROUP BY r.review_id
+                ORDER BY RAND() LIMIT 30;
             `;
         }
         else if (requestType == 'tour') {
             const tour_id = query.tour_id;
             querySelect = `
-                SELECT r.*, u.user_name
+                SELECT r.*, u.user_name, COUNT(CASE WHEN is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN is_like = 0 THEN 1 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
+                LEFT JOIN LikeTable l ON r.user_id = u.user_id
                 WHERE r.tour_id = ? AND r.is_deleted = 0
+                GROUP BY r.review_id
                 ORDER BY r.created DESC
             `;
             params = [tour_id];
@@ -155,10 +159,12 @@ exports.getReview = async (req, res) => {
                 return res.status(400).json({ message: '삭제된 유저(user_id -1)에 대한 리뷰 정보 요청' });
             }
             querySelect = `
-                SELECT r.*, u.user_name
+                SELECT r.*, u.user_name, COUNT(CASE WHEN is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN is_like = 0 THEN 1 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
+                LEFT JOIN LikeTable l ON r.user_id = u.user_id
                 WHERE r.user_id = ? AND r.is_deleted = 0
+                GROUP BY r.review_id
                 ORDER BY r.created DESC
             `;
             params = [user_id];
@@ -169,8 +175,9 @@ exports.getReview = async (req, res) => {
                 SELECT r.*, u.user_name, COUNT(CASE WHEN is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN is_like = 0 THEN 1 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
-                JOIN LikeTable l ON r.user_id = u.user_id
+                LEFT JOIN LikeTable l ON r.user_id = u.user_id
                 WHERE r.review_id = ? AND r.is_deleted = 0
+                GROUP BY r.review_id
             `;
             params = [review_id];
         }
