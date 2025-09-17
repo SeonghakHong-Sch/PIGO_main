@@ -21,6 +21,7 @@ router.post('/user/setUserInfo',middleware.authToken,userInfo.setUserInfo);
 //관광지 관련 API
 router.post('/tour/inputTour', Tour.inputTour);
 router.post('/tour/getTour', Tour.getTour);
+router.get('/tour/getTourDetail', Tour.getTourDetail);
 
 //관심 관광지 관련 API
 router.get('/tour/getInterTour', middleware.authToken, interTour.getInterTour);

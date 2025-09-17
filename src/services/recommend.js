@@ -73,3 +73,14 @@ exports.RecommendPlanAPI = async (user_info, interTourList, visitedTourList, sel
         //console.error(err);
     }
 }
+
+exports.TourDetailAPI = async (contentId) => {
+    try{
+        console.log('추천서버 API URL : ' + process.env.RECOMMEND_SERVER_URL + '/detail/', + contentId);
+        const response = await axios.get(process.env.RECOMMEND_SERVER_URL + '/detail/' + contentId);
+        return response;
+    } catch(err){
+        throw err;
+    }
+
+}
