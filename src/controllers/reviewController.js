@@ -1,3 +1,4 @@
+const nodemon = require('nodemon');
 const db = require('../config/db.js');
 const reviewAver = require('../services/reviewAver.js');
 
@@ -23,9 +24,9 @@ exports.writeReview = async (req, res) => {
     try {
         const [have] = await db.promise().query(querySelect, [userID, tour_id]);
         console.log(have[0].exist);
-        if(have[0].exist){
+        if (have[0].exist) {
             console.log(have[0].exist);
-            return res.status(400).json({message : "리뷰가 이미 존재합니다"});
+            return res.status(400).json({ message: "리뷰가 이미 존재합니다" });
         }
     } catch (err) {
         console.log('리뷰 존재여부 확인 오류', err);
@@ -130,34 +131,55 @@ exports.getReview = async (req, res) => {
 
         if (requestType == 'random') {
             querySelect = `
-                SELECT r.*, u.user_name
+                SELECT r.*, u.user_name, COUNT(CASE WHEN l.is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN l.is_like = 0 THEN 1 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
-                WHERE r.is_deleted = 0
-                ORDER BY RAND() LIMIT 30
+                LEFT JOIN LikeTable l ON r.review_id = l.review_id
+                WHERE r.is_deleted = 0 AND r.user_id != -1
+                GROUP BY r.review_id
+                ORDER BY RAND() LIMIT 30;
             `;
         }
         else if (requestType == 'tour') {
             const tour_id = query.tour_id;
             querySelect = `
-                SELECT r.*, u.user_name
+                SELECT r.*, u.user_name, COUNT(CASE WHEN is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN is_like = 0 THEN 1 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
+                LEFT JOIN LikeTable l ON r.user_id = u.user_id
                 WHERE r.tour_id = ? AND r.is_deleted = 0
+                GROUP BY r.review_id
                 ORDER BY r.created DESC
             `;
             params = [tour_id];
         }
         else if (requestType == 'user') {
             const user_id = query.user_id;
+            if (user_id == -1) {
+                return res.status(400).json({ message: '삭제된 유저(user_id -1)에 대한 리뷰 정보 요청' });
+            }
             querySelect = `
-                SELECT r.*, u.user_name
+                SELECT r.*, u.user_name, COUNT(CASE WHEN is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN is_like = 0 THEN 1 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
+                LEFT JOIN LikeTable l ON r.user_id = u.user_id
                 WHERE r.user_id = ? AND r.is_deleted = 0
+                GROUP BY r.review_id
                 ORDER BY r.created DESC
             `;
             params = [user_id];
+        }
+        else if (requestType == 'review') {
+            const review_id = query.review_id;
+            querySelect = `
+                SELECT r.*, u.user_name, COUNT(CASE WHEN is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN is_like = 0 THEN 1 END) AS dislikes
+                FROM ReviewTable r
+                JOIN UserTable u ON r.user_id = u.user_id
+                LEFT JOIN LikeTable l ON r.user_id = u.user_id
+                WHERE r.review_id = ? AND r.is_deleted = 0
+                GROUP BY r.review_id
+            `;
+            params = [review_id];
         }
         else {
             return res.status(400).json({ message: "잘못된 리뷰 정보 요청" });

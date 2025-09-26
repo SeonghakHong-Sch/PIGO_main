@@ -30,7 +30,7 @@ exports.tourRecommend = async (req, res) => {
     }
 
     try {
-        interTourIDList = await dbAccess.getVisitedTour(userID);
+        interTourIDList = await dbAccess.getInterTour(userID);
     } catch (err) {
         return res.status(500).json({ message: "추천 시 interTour 접근 오류", error: err });
     }
