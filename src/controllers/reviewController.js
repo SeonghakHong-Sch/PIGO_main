@@ -146,7 +146,7 @@ exports.getReview = async (req, res) => {
                 SELECT r.*, u.user_name, COUNT(CASE WHEN is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN is_like = 0 THEN 1 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
-                LEFT JOIN LikeTable l ON r.user_id = u.user_id
+                LEFT JOIN LikeTable l ON r.review_id = l.review_id
                 WHERE r.tour_id = ? AND r.is_deleted = 0
                 GROUP BY r.review_id
                 ORDER BY r.created DESC
@@ -162,7 +162,7 @@ exports.getReview = async (req, res) => {
                 SELECT r.*, u.user_name, COUNT(CASE WHEN is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN is_like = 0 THEN 1 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
-                LEFT JOIN LikeTable l ON r.user_id = u.user_id
+                LEFT JOIN LikeTable l ON r.review_id = l.review_id
                 WHERE r.user_id = ? AND r.is_deleted = 0
                 GROUP BY r.review_id
                 ORDER BY r.created DESC
@@ -175,7 +175,7 @@ exports.getReview = async (req, res) => {
                 SELECT r.*, u.user_name, COUNT(CASE WHEN is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN is_like = 0 THEN 1 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
-                LEFT JOIN LikeTable l ON r.user_id = u.user_id
+                LEFT JOIN LikeTable l ON r.review_id = l.review_id
                 WHERE r.review_id = ? AND r.is_deleted = 0
                 GROUP BY r.review_id
             `;
