@@ -70,11 +70,11 @@ exports.getlikes = async (req, res) => {
 
     const querySelect = `
     SELECT SUM(CASE WHEN is_like = 1 THEN 1 ELSE 0 END) AS likes, SUM(CASE WHEN is_like = 0 THEN 1 ELSE 0 END) AS dislikes 
-    FROM LikeTable
+    FROM LikeTable WHERE reciew_id = ?
     `;
 
     try {
-        const [rows] = await db.promise().query(querySelect, [review_id, review_id]);
+        const [rows] = await db.promise().query(querySelect, [review_id]);
         return res.status(200).json(rows);
     } catch (err) {
         console.log('좋아요/싫어요 조회 오류', err);
