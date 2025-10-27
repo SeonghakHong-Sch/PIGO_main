@@ -49,8 +49,8 @@ exports.editReview = async (req, res) => { //필터 쿼리문써서
 
     const body = req.body;
     const review_id = body.review_id;
-    const new_content = body.new_content;
-    const new_rating = body.new_rating;
+    let new_content = body.new_content;
+    let new_rating = body.new_rating;
 
     const [reviewData] = await db.promise().query('SELECT * FROM ReviewTable WHERE review_id = ?', [review_id]);
     const review = reviewData[0];
@@ -68,12 +68,12 @@ exports.editReview = async (req, res) => { //필터 쿼리문써서
     }
     if (new_rating == null) {
         new_rating = review.rating;
-    } else if (new_rating > 5 || newrating < 1) {
+    } else if (new_rating > 5 || new_rating < 1) {
         console.log('리뷰 수정 점수 이상', new_rating);
         return res.status(400).json({ message: '리뷰 수정 점수 이상' });
     }
 
-    const updateQuery = 'UPDATE ReviewTable SET content = ? , rating = ?  WHERE review_id = ?';
+    const updateQuery = 'UPDATE ReviewTable SET content = ? , rating = ?, edited = NOW()  WHERE review_id = ?';
 
     try {
         const [result] = await db.promise().query(updateQuery, [new_content, new_rating, review_id]);
