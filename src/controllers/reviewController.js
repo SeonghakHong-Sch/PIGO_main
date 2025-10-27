@@ -68,7 +68,7 @@ exports.editReview = async (req, res) => { //필터 쿼리문써서
     }
     if (new_rating == null) {
         new_rating = review.rating;
-    } else if (new_rating > 5 || newrating < 1) {
+    } else if (new_rating > 5 || new_rating < 1) {
         console.log('리뷰 수정 점수 이상', new_rating);
         return res.status(400).json({ message: '리뷰 수정 점수 이상' });
     }
