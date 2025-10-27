@@ -1,6 +1,7 @@
 const db = require('../config/db.js');
 const recommend = require('../services/recommend.js');
 const dbAccess = require('../services/dbAccess.js');
+const { response } = require('express');
 
 exports.tourRecommend = async (req, res) => {
     //사용자한테 받은 파라미터 저장
@@ -68,7 +69,8 @@ exports.tourRecommend = async (req, res) => {
     } catch (err) {
         return res.status(500).json({
             message: "관광지 추천API 에러",
-            error: err
+            error: err,
+            response_server : response
         });
     }
 }
@@ -83,7 +85,8 @@ exports.tourRandom = async (req, res) => {
     } catch (err) {
         return res.status(500).json({
             message: "랜덤API 에러",
-            error: err
+            error: err,
+            response_server : response
         });
     }
 }
@@ -169,7 +172,8 @@ exports.planRecommend = async (req, res) => {
     } catch (err) {
         return res.status(500).json({
             message: "일정 API 오류",
-            error: err
+            error: err,
+            response_server : response
         });
     }
 }
