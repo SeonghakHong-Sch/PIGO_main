@@ -73,7 +73,7 @@ exports.editReview = async (req, res) => { //필터 쿼리문써서
         return res.status(400).json({ message: '리뷰 수정 점수 이상' });
     }
 
-    const updateQuery = 'UPDATE ReviewTable SET content = ? , rating = ?, edited = NOW()  WHERE review_id = ?';
+    const updateQuery = 'UPDATE ReviewTable SET content = ? , rating = ?, edited = NOW  WHERE review_id = ?';
 
     try {
         const [result] = await db.promise().query(updateQuery, [new_content, new_rating, review_id]);
@@ -131,36 +131,48 @@ exports.getReview = async (req, res) => {
 
         if (requestType == 'random') {
             querySelect = `
-                SELECT r.*, u.user_name, 
-                    COALESCE(likes_count.likes, 0) AS likes,
-                    COALESCE(likes_count.dislikes, 0) AS dislikes
+                SELECT 
+                    r.*, 
+                    u.user_name,
+                    COALESCE(l.likes, 0) AS likes,
+                    COALESCE(l.dislikes, 0) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
                 LEFT JOIN (
-                    SELECT review_id, SUM(CASE WHEN is_like = 1 THEN 1 ELSE 0 END) AS likes, SUM(CASE WHEN is_like = 0 THEN 1 ELSE 0 END) AS dislikes
+                    SELECT 
+                        review_id, 
+                        SUM(CASE WHEN is_like = 1 THEN 1 ELSE 0 END) AS likes, 
+                        SUM(CASE WHEN is_like = 0 THEN 1 ELSE 0 END) AS dislikes
                     FROM LikeTable
                     GROUP BY review_id
-                ) AS likes_count ON r.review_id = likes_count.review_id
+                ) l ON r.review_id = l.review_id
                 WHERE r.is_deleted = 0 AND r.user_id != -1
-                ORDER BY RAND() LIMIT 30
+                ORDER BY RAND() 
+                LIMIT 30
             `;
         }
         else if (requestType == 'tour') {
             const tour_id = query.tour_id;
             querySelect = `
-                SELECT r.*, u.user_name, 
-                    COALESCE(likes_count.likes, 0) AS likes,
-                    COALESCE(likes_count.dislikes, 0) AS dislikes
+                SELECT 
+                    r.*, 
+                    u.user_name, 
+                    COALESCE(l.likes, 0) AS likes, 
+                    COALESCE(l.dislikes, 0) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
                 LEFT JOIN (
-                    SELECT review_id, SUM(CASE WHEN is_like = 1 THEN 1 ELSE 0 END) AS likes, SUM(CASE WHEN is_like = 0 THEN 1 ELSE 0 END) AS dislikes
+                    SELECT 
+                        review_id, 
+                        SUM(CASE WHEN is_like = 1 THEN 1 ELSE 0 END) AS likes, 
+                        SUM(CASE WHEN is_like = 0 THEN 1 ELSE 0 END) AS dislikes
                     FROM LikeTable
                     GROUP BY review_id
-                ) AS likes_count ON r.review_id = likes_count.review_id
+                ) l ON r.review_id = l.review_id
                 WHERE r.tour_id = ? AND r.is_deleted = 0
                 ORDER BY r.created DESC
             `;
+            console.log(tour_id,querySelect);
             params = [tour_id];
         }
         else if (requestType == 'user') {
@@ -169,16 +181,21 @@ exports.getReview = async (req, res) => {
                 return res.status(400).json({ message: '삭제된 유저(user_id -1)에 대한 리뷰 정보 요청' });
             }
             querySelect = `
-                SELECT r.*, u.user_name, COALESCE(likes_count.likes, 0) AS likes, COALESCE(likes_count.dislikes, 0) AS dislikes
+                SELECT 
+                    r.*, 
+                    u.user_name, 
+                    COALESCE(l.likes, 0) AS likes, 
+                    COALESCE(l.dislikes, 0) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
                 LEFT JOIN (
-                    SELECT review_id,
+                    SELECT 
+                        review_id,
                         SUM(CASE WHEN is_like = 1 THEN 1 ELSE 0 END) AS likes,
                         SUM(CASE WHEN is_like = 0 THEN 1 ELSE 0 END) AS dislikes
                     FROM LikeTable
                     GROUP BY review_id
-                ) AS likes_count ON r.review_id = likes_count.review_id
+                ) l ON r.review_id = l.review_id
                 WHERE r.user_id = ? AND r.is_deleted = 0
                 ORDER BY r.created DESC
             `;
@@ -187,16 +204,21 @@ exports.getReview = async (req, res) => {
         else if (requestType == 'review') {
             const review_id = query.review_id;
             querySelect = `
-                SELECT r.*, u.user_name, COALESCE(likes_count.likes, 0) AS likes, COALESCE(likes_count.dislikes, 0) AS dislikes
+                SELECT 
+                    r.*,
+                    u.user_name,
+                    COALESCE(l.likes, 0) AS likes, 
+                    COALESCE(l.dislikes, 0) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
                 LEFT JOIN (
-                    SELECT review_id,
+                    SELECT 
+                        review_id,
                         SUM(CASE WHEN is_like = 1 THEN 1 ELSE 0 END) AS likes,
                         SUM(CASE WHEN is_like = 0 THEN 1 ELSE 0 END) AS dislikes
                     FROM LikeTable
                     GROUP BY review_id
-                ) AS likes_count ON r.review_id = likes_count.review_id
+                ) l ON r.review_id = l.review_id
                 WHERE r.review_id = ? AND r.is_deleted = 0
             `;
             params = [review_id];
@@ -206,6 +228,7 @@ exports.getReview = async (req, res) => {
         }
 
         const [rows] = await db.promise().query(querySelect, params);
+        console.log(rows);
         return res.json(rows);
 
     } catch (err) {
