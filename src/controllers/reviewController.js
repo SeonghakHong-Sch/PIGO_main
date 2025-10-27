@@ -143,7 +143,7 @@ exports.getReview = async (req, res) => {
         else if (requestType == 'tour') {
             const tour_id = query.tour_id;
             querySelect = `
-                SELECT r.*, u.user_name, COUNT(CASE WHEN is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN is_like = 0 THEN 1 END) AS dislikes
+                SELECT r.*, u.user_name, SUM(CASE WHEN l.is_like = 1 THEN 1 ELSE 0 END) AS likes, SUM(CASE WHEN l.is_like = 0 THEN 1 ELSE 0 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
                 LEFT JOIN LikeTable l ON r.review_id = l.review_id
