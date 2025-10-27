@@ -69,9 +69,7 @@ exports.getlikes = async (req, res) => {
     const review_id = query.review_id;
 
     const querySelect = `
-    SELECT COUNT(
-    CASE WHEN review_id = ? AND is_like = 1 THEN 1 END) AS likes, 
-    COUNT(CASE WHEN review_id = ? AND is_like = 0 THEN 1 END) AS dislikes 
+    SELECT SUM(CASE WHEN is_like = 1 THEN 1 ELSE 0 END) AS likes, SUM(CASE WHEN is_like = 0 THEN 1 ELSE 0 END) AS dislikes 
     FROM LikeTable
     `;
 

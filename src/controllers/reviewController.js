@@ -20,7 +20,7 @@ exports.writeReview = async (req, res) => {
         return res.status(400).json({ message: '리뷰 점수 이상' });
     }
 
-    const querySelect = 'SELECT EXISTS(SELECT 1 FROM ReviewTable WHERE user_id = ? AND tour_id = ? ) AS exist';
+    const querySelect = 'SELECT EXISTS(SELECT 1 FROM ReviewTable WHERE user_id = ? AND tour_id = ? AND is_deleted = 0 ) AS exist';
     try {
         const [have] = await db.promise().query(querySelect, [userID, tour_id]);
         console.log(have[0].exist);
@@ -143,7 +143,7 @@ exports.getReview = async (req, res) => {
         else if (requestType == 'tour') {
             const tour_id = query.tour_id;
             querySelect = `
-                SELECT r.*, u.user_name, COUNT(CASE WHEN is_like = 1 THEN 1 END) AS likes, COUNT(CASE WHEN is_like = 0 THEN 1 END) AS dislikes
+                SELECT r.*, u.user_name, SUM(CASE WHEN l.is_like = 1 THEN 1 ELSE 0 END) AS likes, SUM(CASE WHEN l.is_like = 0 THEN 1 ELSE 0 END) AS dislikes
                 FROM ReviewTable r
                 JOIN UserTable u ON r.user_id = u.user_id
                 LEFT JOIN LikeTable l ON r.review_id = l.review_id
