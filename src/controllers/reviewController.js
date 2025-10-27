@@ -20,7 +20,7 @@ exports.writeReview = async (req, res) => {
         return res.status(400).json({ message: '리뷰 점수 이상' });
     }
 
-    const querySelect = 'SELECT EXISTS(SELECT 1 FROM ReviewTable WHERE user_id = ? AND tour_id = ? ) AS exist';
+    const querySelect = 'SELECT EXISTS(SELECT 1 FROM ReviewTable WHERE user_id = ? AND tour_id = ? AND is_deleted = 0 ) AS exist';
     try {
         const [have] = await db.promise().query(querySelect, [userID, tour_id]);
         console.log(have[0].exist);
